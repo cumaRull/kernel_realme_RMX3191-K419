@@ -19,7 +19,10 @@
 static char current_chipset[32];
 static bool support_nfc = false;
 
-bool is_nfc_support()
+static const char* nfc_feature = "feature";
+static const char* feature_src = "/vendor/etc/nfc/com.oppo.nfc_feature.xml";
+
+bool is_nfc_support(void)
 {
 	return support_nfc;
 }
