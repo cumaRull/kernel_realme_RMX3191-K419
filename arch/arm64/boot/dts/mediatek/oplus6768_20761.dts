@@ -1290,7 +1290,6 @@
 /* DISPSYS GPIO standardization end*/
 
 #include "mediatek/cust_mt6769_sia8101.dtsi"
-#include <oplus6768_20761/cust.dtsi>
 #include "mediatek/cust_mt6768_touch_720x1600.dtsi"
 #include "mediatek/cust_mt6768_camera_even.dtsi"
 #include "mediatek/cust_mt6768_touch_1080x2160.dtsi"

@@ -966,7 +966,6 @@
 		};
 };
 #include "mediatek/oplus6769_charger_226AF.dtsi"
-#include <oplus6769_226AF/cust.dtsi>
 #include "mediatek/cust_mt6769_camera_miami.dtsi"
 #include "mediatek/cust_mt6769_touch_1080x2400.dtsi"
 #include "mediatek/cust_mt6769_sia8102.dtsi"
