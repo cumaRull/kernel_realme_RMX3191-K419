@@ -134,6 +134,6 @@ all.config
 *.kdev4
 
 clang
-anyKernel
+anykernel
 out
 run.sh
