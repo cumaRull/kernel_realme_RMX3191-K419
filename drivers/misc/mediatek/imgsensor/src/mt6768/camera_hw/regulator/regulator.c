@@ -68,7 +68,7 @@ struct REGULATOR_CTRL regulator_control[REGULATOR_TYPE_MAX_NUM] = {
 static struct REGULATOR reg_instance;
 
 #ifdef OPLUS_FEATURE_CAMERA_COMMON
-struct regmap *g_regmap;
+static struct regmap *g_regmap;
 #endif /* ALPS07853033 */
 
 static int regulator_oc_notify(
