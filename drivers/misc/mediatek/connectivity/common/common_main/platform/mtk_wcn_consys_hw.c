@@ -171,7 +171,7 @@ struct work_struct plt_resume_worker;
 static void plat_resume_handler(struct work_struct *work);
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
-struct regmap *g_regmap;
+ /* struct regmap *g_regmap; */
 #endif
 
 static int wmt_thermal_get_temp_cb(void *data, int *temp);
