@@ -3469,7 +3469,7 @@ struct mtk_power_gate {
 	}
 
 /* FIXME: all values needed to be verified */
-struct mtk_power_gate scp_clks[] __initdata = {
+struct mtk_power_gate scp_clks[] = {
 	PGATE2(SCP_SYS_MD1, pg_md1, NULL, NULL, NULL, SYS_MD1),
 	PGATE2(SCP_SYS_CONN, pg_conn, NULL, NULL, NULL, SYS_CONN),
 	PGATE2(SCP_SYS_DPY, pg_dpy, NULL, NULL, NULL, SYS_DPY),
@@ -3488,7 +3488,7 @@ struct mtk_power_gate scp_clks[] __initdata = {
 	PGATE2(SCP_SYS_VDEC, pg_vdec, pg_dis, NULL, &vdec_cg, SYS_VDEC),
 };
 
-static int  init_clk_scpsys(struct platform_device *pdev, struct clk_onecell_data *clk_data)
+static int init_clk_scpsys(struct platform_device *pdev, struct clk_onecell_data *clk_data)
 {
 	int i;
 	struct clk *clk;
@@ -4009,7 +4009,7 @@ module_init(debug_init);
 module_exit(debug_exit);
 #endif				/* CLK_DEBUG */
 
-static int __init clk_mt6768_scpsys_init(void)
+static int clk_mt6768_scpsys_init(void)
 {
 
 	return platform_driver_register(&clk_mt6768_scpsys_drv);
