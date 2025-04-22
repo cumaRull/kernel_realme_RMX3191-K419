@@ -35,20 +35,25 @@ extern int set_sched_boost(unsigned int val);
 
 DEFINE_MUTEX(cpufreq_mtk_mutex);
 
-/* Updates CPU frequency for chosen cluster */
-int update_cpu_freq(int cluster)
+/* Sets current minimum CPU frequency */
+int set_min_cpu_freq(int cluster, int new_cpu_freq)
 {
     int ret;
 
-#ifdef CONFIG_MTK_SCHED_BOOST
-    int sched_boost_type = (current_cpu_freq[cluster].min > 0 || current_cpu_freq[cluster].max > 0)
-                            ? SCHED_ALL_BOOST : SCHED_NO_BOOST;
+    int max_cpu_freq = current_cpu_freq[cluster].max;
 
-    ret = set_sched_boost(sched_boost_type);
-    if (ret != 0) {
-        pr_err("[%s] Failed to set sched boost type, type=%d, ret=%d\n", __func__, sched_boost_type, ret);
-        return -EIO;
+    if (new_cpu_freq > max_cpu_freq && max_cpu_freq > 0) {
+        pr_err("[%s] Cannot set min cpu freq higher than max cpu freq!\n", __func__);
+        return -EINVAL;
     }
+
+    current_cpu_freq[cluster].min = new_cpu_freq;
+
+#ifdef CONFIG_MTK_SCHED_BOOST
+    int sched_boost_type = (new_cpu_freq > 0) ? SCHED_ALL_BOOST : SCHED_NO_BOOST;
+    ret = set_sched_boost(sched_boost_type);
+    if (ret != 0)
+        return -EIO;
 #endif
 
     ret = update_userlimit_cpu_freq(CPU_KIR_PERF, CLUSTER_NUM, current_cpu_freq);
@@ -61,27 +66,36 @@ int update_cpu_freq(int cluster)
 }
 
 /* Sets current maximum CPU frequency */
-int set_max_cpu_freq(int cluster, int max)
+int set_max_cpu_freq(int cluster, int new_cpu_freq)
 {
-    if (max < current_cpu_freq[cluster].min && current_cpu_freq[cluster].min > 0) {
-        pr_err("[%s] Max freq cannot be lower than min freq!\n", __func__);
+    int ret;
+
+    int min_cpu_freq = current_cpu_freq[cluster].min;
+
+    if (new_cpu_freq < min_cpu_freq && min_cpu_freq > 0) {
+        pr_err("[%s] Cannot set max cpu freq lower than min cpu freq!\n", __func__);
         return -EINVAL;
     }
-    current_cpu_freq[cluster].max = max > 0 ? max : -1;
 
-    return update_cpu_freq(cluster);
-}
+    current_cpu_freq[cluster].max = new_cpu_freq;
 
-/* Sets current minimum CPU frequency */
-int set_min_cpu_freq(int cluster, int min)
-{
-    if (min > current_cpu_freq[cluster].max && current_cpu_freq[cluster].max > 0) {
-        pr_err("[%s] Min freq cannot be higher than max freq!\n", __func__);
-        return -EINVAL;
+#ifdef CONFIG_MTK_SCHED_BOOST
+    int sched_boost_type = (new_cpu_freq > 0) ? SCHED_ALL_BOOST : SCHED_NO_BOOST;
+    ret = set_sched_boost(sched_boost_type);
+    if (ret != 0) {
+        pr_err("[%s] Failed to set sched boost type, type=%d, ret=%d\n", __func__, sched_boost_type, ret);
+        return -EIO;
     }
-    current_cpu_freq[cluster].min = min > 0 ? min : -1;
+#endif
 
-    return update_cpu_freq(cluster);
+    ret = update_userlimit_cpu_freq(CPU_KIR_PERF, CLUSTER_NUM, current_cpu_freq);
+
+    if (ret != 0) {
+        pr_err("[%s] Failed to set cpu freq, ret=%d\n", __func__, ret);
+        return -EIO;
+    }
+
+    return ret;
 }
 
 static ssize_t show_lcluster_min_freq(struct kobject *kobj,
@@ -208,7 +222,7 @@ static struct attribute *mtk_param_attributes[] = {
 
 static struct attribute_group mtk_param_attr_group = {
     .attrs = mtk_param_attributes,
-    .name = "mtk",
+    .name = "cpufreq_mtk",
 };
 
 static int __init cpufreq_mtk_init(void)
