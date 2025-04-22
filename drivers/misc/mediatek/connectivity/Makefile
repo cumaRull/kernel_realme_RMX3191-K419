@@ -60,7 +60,7 @@ endif
         export WIFI_IP_SET=2
         export WIFI_ECO_VER=1
 
-        export CFG_FM_CHIP_ID=6768
+        export CFG_FM_CHIP_ID=6785
         export CFG_FM_CHIP=mt6631
 
         # Do build-in for xxx.c checking
