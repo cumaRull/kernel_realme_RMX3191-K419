@@ -169,21 +169,6 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
 		nmi_panic_self_stop(regs);
 }
 EXPORT_SYMBOL(nmi_panic);
-
-#ifdef OPLUS_FEATURE_PERFORMANCE
-//ZuoTong@ANDROID.PERFORMANCE, 2020/06/28,Add for flushing device cache before goto dump mode!
-extern int panic_flush_device_cache(int timeout);
-extern unsigned int get_eng_version(void);
-void flush_cache_on_panic(void){
-    if (get_eng_version() == 1){
-        pr_err("In full dump mode!\n");
-    }else{
-        pr_err("In mini dump mode and start flushing the devices cache!");
-        panic_flush_device_cache(2000);
-    }
-}
-#endif  /*OPLUS_FEATURE_PERFORMANCE*/
-
 /**
  *	panic - halt the system
  *	@fmt: The text string to print
