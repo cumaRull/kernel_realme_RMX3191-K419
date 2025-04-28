@@ -11,9 +11,15 @@ MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
 # published by the Free Software Foundation.
 
 ###############################################################################
+# Necessary Check
 MTK_PLATFORM := $(subst ",,$(CONFIG_MTK_PLATFORM))
 ifeq ($(CONFIG_MTK_GPS_SUPPORT), y)
 
+ifeq ($(AUTOCONF_H),)
+    $(error AUTOCONF_H is not defined)
+endif
+
+ccflags-y += -imacros $(AUTOCONF_H)
 ifndef TOP
     TOP := $(srctree)/..
 endif
