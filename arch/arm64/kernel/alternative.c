@@ -47,11 +47,11 @@ static bool branch_insn_requires_update(struct alt_instr *alt, unsigned long pc)
 	unsigned long replptr;
 
 	if (kernel_text_address(pc))
-		return true;
+		return 1;
 
 	replptr = (unsigned long)ALT_REPL_PTR(alt);
 	if (pc >= replptr && pc <= (replptr + alt->alt_len))
-		return false;
+		return 0;
 
 	/*
 	 * Branching into *another* alternate sequence is doomed, and
