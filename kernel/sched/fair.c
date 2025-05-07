@@ -9555,7 +9555,6 @@ static int detach_tasks(struct lb_env *env, struct rq_flags *rf)
 		if (should_ux_task_skip_cpu(p, env->dst_cpu))
 			goto next;
 #endif /* OPLUS_FEATURE_SCHED_ASSIST */
-		load = task_h_load(p);
 
 		/*
 		 * Depending of the number of CPUs and tasks and the
